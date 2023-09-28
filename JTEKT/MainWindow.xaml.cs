@@ -1,22 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Web.Helpers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 using Chart = System.Windows.Forms.DataVisualization.Charting.Chart;
 
@@ -52,7 +38,7 @@ namespace JTEKT
             _json = File.Open(fileName, FileMode.Open);
             StreamReader reader = new StreamReader(_json);
             string json = reader.ReadToEnd();
-            dynamic Obj = System.Web.Helpers.Json.Decode(json);
+            dynamic Obj = Json.Decode(json);
             Chart positionChart = this.FindName("Position") as Chart;
             positionChart.BackColor = System.Drawing.Color.AliceBlue; 
             Series chartPoints =positionChart.Series.Add("Points");
