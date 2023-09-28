@@ -7,7 +7,7 @@
         xmlns:winformchart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
         xmlns:local="clr-namespace:JTEKT"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280"
+        Title="Press Kit JSON Viewer" Height="720" Width="1280"
         WindowStartupLocation= "CenterOwner">
         
     <Grid>
