@@ -129,7 +129,7 @@ namespace JTEKT
                         foreach (var point in points)
                         {
                             chartPoints.Points.AddXY(cycleTime * i, (double)point.X);
-                            forcePoints.Points.AddXY(cycleTime * i, (Double)point.Y);
+                            forcePoints.Points.AddXY(cycleTime * i, (double)point.Y);
                             i++;
                         }
                     }
