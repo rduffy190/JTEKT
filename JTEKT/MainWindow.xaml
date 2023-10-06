@@ -12,6 +12,7 @@
         
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="8*"/>
             <ColumnDefinition Width="*" MinWidth="20"/>
         </Grid.ColumnDefinitions>
@@ -19,9 +20,17 @@
             <RowDefinition Height="*" MinHeight="20"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="Combo_Box" Grid.Row="0" Grid.Column="0" SelectionChanged="Combo_Box_SelectionChanged" FontSize="18" HorizontalContentAlignment="Center"/>
-        <Button x:Name="Browse" Grid.Column="1" Content="..." Click="Browse_Click"/>
-        <StackPanel Grid.ColumnSpan ="2" Grid.Row="1">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Overlay?" FontSize="18" VerticalAlignment="Bottom" Margin="0,0,10,0"/>
+            <CheckBox x:Name="Overlay_Multiple" Height="14" Width="17" VerticalAlignment="Bottom" >
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" ></ScaleTransform>
+                </CheckBox.LayoutTransform>
+            </CheckBox>
+        </StackPanel>
+        <ComboBox x:Name="Combo_Box" Grid.Row="0" Grid.Column="1" SelectionChanged="Combo_Box_SelectionChanged" FontSize="18" HorizontalContentAlignment="Center"/>
+        <Button x:Name="Browse" Grid.Column="2" Content="..." Click="Browse_Click"/>
+        <StackPanel Grid.ColumnSpan ="3" Grid.Row="1" Name="Graph_Panel">
             <WindowsFormsHost >
                 <winformchart:Chart x:Name="Position" Dock="Fill"/>
             </WindowsFormsHost>
