@@ -44,14 +44,17 @@ namespace JTEKT
         private void loadGraph(string fileName)
         {
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait; 
+
             _json = File.Open(fileName, FileMode.Open);
             StreamReader reader = new StreamReader(_json);
             string json = reader.ReadToEnd();
             reader.Close(); 
+
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             _obj = null;  
             serializer.MaxJsonLength = Int32.MaxValue;
             var deserialized = serializer.DeserializeObject(json);
+
             if (deserialized != null)
             {
                 var dictValues = deserialized as IDictionary<string, object>;
@@ -74,7 +77,6 @@ namespace JTEKT
             forceChart.ChartAreas.Clear();
             forceChart.Series.Clear();
             forceChart.BackColor = System.Drawing.Color.AliceBlue;
-
             Series forcePoints = forceChart.Series.Add("Points");
             forcePoints.ChartType = SeriesChartType.Line;
 
