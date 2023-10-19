@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Input; 
 using System.Drawing;
 using System.IO;
 using System.Media;
@@ -42,6 +43,7 @@ namespace JTEKT
         /// <param name="fileName"></param>
         private void loadGraph(string fileName)
         {
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait; 
             _json = File.Open(fileName, FileMode.Open);
             StreamReader reader = new StreamReader(_json);
             string json = reader.ReadToEnd();
@@ -62,15 +64,25 @@ namespace JTEKT
                 }
             }
             Chart positionChart = this.FindName("Position") as Chart;
+            positionChart.ChartAreas.Clear(); 
+            positionChart.Series.Clear();
             positionChart.BackColor = System.Drawing.Color.AliceBlue; 
             Series chartPoints =positionChart.Series.Add("Points");
             chartPoints.ChartType = SeriesChartType.Line;
+
             Chart forceChart = this.FindName("Force") as Chart;
+            forceChart.ChartAreas.Clear();
+            forceChart.Series.Clear();
             forceChart.BackColor = System.Drawing.Color.AliceBlue;
+
             Series forcePoints = forceChart.Series.Add("Points");
             forcePoints.ChartType = SeriesChartType.Line;
 
             ComboBox combo = this.FindName("Combo_Box") as ComboBox;
+            combo.SelectionChanged -= Combo_Box_SelectionChanged;
+            combo.Items.Clear();
+            combo.SelectionChanged += Combo_Box_SelectionChanged;
+          
      
             foreach (dynamic obj in _obj)
              {
@@ -89,8 +101,10 @@ namespace JTEKT
             ChartArea forceArea = forceChart.ChartAreas.Add("Time");
             forceArea.AxisX.Title = "Time (s)";
             forceArea.AxisY.Title = "Force (N)";
-            combo.SelectedIndex = 0; 
+            combo.SelectedIndex = 0;
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
         }
+
         /// <summary>
         /// When the combo box selection changes, populate graphs with data from the selected date 
         /// </summary>
@@ -137,6 +151,13 @@ namespace JTEKT
             //cast the sender so we can get th item info 
             ComboBox comboBox = (ComboBox)sender; 
             ComboBoxItem item = comboBox.SelectedItem as ComboBoxItem;
+            if(item == null)
+            {
+                comboBox.SelectionChanged -= Combo_Box_SelectionChanged; 
+                comboBox.SelectedIndex = 0;
+                comboBox.SelectionChanged += Combo_Box_SelectionChanged;
+                item = comboBox.SelectedItem as ComboBoxItem;
+            }
             string dateTime = item.Content as string;
             //find the data of the matching date and populate chart
             foreach (dynamic obj in _obj)
