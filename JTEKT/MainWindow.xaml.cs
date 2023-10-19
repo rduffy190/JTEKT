@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Media;
@@ -44,7 +45,22 @@ namespace JTEKT
             _json = File.Open(fileName, FileMode.Open);
             StreamReader reader = new StreamReader(_json);
             string json = reader.ReadToEnd();
-            dynamic Obj = Json.Decode(json);
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            // dynamic Obj = Json.Decode(json);
+            _obj = null;  
+            serializer.MaxJsonLength = Int32.MaxValue;
+            var deserialized = serializer.DeserializeObject(json);
+            if (deserialized != null)
+            {
+                var dictValues = deserialized as IDictionary<string, object>;
+                if (dictValues != null)
+                    _obj = new DynamicJsonObject(dictValues);
+                var arrayValues = deserialized as object[];
+                if (arrayValues != null)
+                {
+                    _obj = new DynamicJsonArray(arrayValues);
+                }
+            }
             Chart positionChart = this.FindName("Position") as Chart;
             positionChart.BackColor = System.Drawing.Color.AliceBlue; 
             Series chartPoints =positionChart.Series.Add("Points");
@@ -56,7 +72,7 @@ namespace JTEKT
 
             ComboBox combo = this.FindName("Combo_Box") as ComboBox;
      
-            foreach (dynamic obj in Obj)
+            foreach (dynamic obj in _obj)
              {
                     ComboBoxItem item = new ComboBoxItem();
                     item.Content = obj.createdDate;
@@ -94,11 +110,7 @@ namespace JTEKT
                 _maxForce = 0;
                 _maxPosition = 0; 
             }
-            _json.Position = 0;
-            StreamReader reader = new StreamReader(_json);
-            string json = reader.ReadToEnd();
-            dynamic Obj = System.Web.Helpers.Json.Decode(json);
-
+  
             Chart positionChart = this.FindName("Position") as Chart;
             if(!t_overlay)
             {
@@ -127,7 +139,7 @@ namespace JTEKT
             ComboBoxItem item = comboBox.SelectedItem as ComboBoxItem;
             string dateTime = item.Content as string;
             //find the data of the matching date and populate chart
-            foreach (dynamic obj in Obj)
+            foreach (dynamic obj in _obj)
             {
                 if (obj.createdDate == dateTime)
                 {
@@ -153,7 +165,7 @@ namespace JTEKT
                     {
                         var points = obj.Points;
                         int i = 0;
-                        double cycleTime = ((double)obj.cycleTime) / 1000.0;
+                        double cycleTime = ((double)obj.cycleTime) / points.Length;
                         foreach (var point in points)
                         {
                             chartPoints.Points.AddXY(cycleTime * i, (double)point.X);
@@ -176,7 +188,7 @@ namespace JTEKT
             TextBlock text = new TextBlock(); 
             text.Text = dateTime;
             text.FontSize = 18;
-            text.Foreground = _textColor[_overLays %5];
+            text.Foreground = _textColor[_overLays % _textColor.Count];
             DisplayedValues.Children.Insert(_overLays, text);
             _overLays++; 
 
@@ -191,7 +203,8 @@ namespace JTEKT
         private Dictionary<int, System.Windows.Media.Brush> _textColor = new Dictionary<int, System.Windows.Media.Brush> { { 0, System.Windows.Media.Brushes.Black }, { 1,System.Windows.Media.Brushes.Blue }, 
                                                                                                                  { 2, System.Windows.Media.Brushes.Brown }, { 3,System.Windows.Media.Brushes.DarkBlue }, {4, System.Windows.Media.Brushes.DarkGreen } };
         private decimal _maxForce;
-        private decimal _maxPosition; 
+        private decimal _maxPosition;
+        private dynamic _obj; 
     }
 
        
