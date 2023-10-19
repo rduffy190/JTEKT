@@ -47,8 +47,8 @@ namespace JTEKT
             _json = File.Open(fileName, FileMode.Open);
             StreamReader reader = new StreamReader(_json);
             string json = reader.ReadToEnd();
+            reader.Close(); 
             var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            // dynamic Obj = Json.Decode(json);
             _obj = null;  
             serializer.MaxJsonLength = Int32.MaxValue;
             var deserialized = serializer.DeserializeObject(json);
